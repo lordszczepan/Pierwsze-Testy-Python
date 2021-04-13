@@ -27,7 +27,6 @@ class Twitter(object):
         return [m.lower() for m in re.findall(r"#(\w+)", message)]
     # 'r' jest konieczne ale nie opisane w tutorialu
 
-
 # twitter = Twitter()
 # print(twitter.version, twitter.tweets)
 # twitter.tweet('This is a test message')
