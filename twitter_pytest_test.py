@@ -30,13 +30,13 @@ def test_twitter_initialization(twitter):
 
 def test_tweet_single_message(twitter):
     twitter.tweet('Test message')
-    assert twitter.tweets == ['Test message']
+    assert twitter.tweet_messages == ['Test message']
 
 
 def test_tweet_long_message(twitter):
     with pytest.raises(Exception):
         twitter.tweet('test' * 41)
-    assert twitter.tweets == []
+    assert twitter.tweet_messages == []
 
 def test_initialize_two_twitter_classes(backend):
     twitter1 = Twitter(backend=backend)
@@ -45,7 +45,7 @@ def test_initialize_two_twitter_classes(backend):
     twitter1.tweet('Test 1')
     twitter1.tweet('Test 2')
 
-    assert twitter2.tweets == ['Test 1', 'Test 2']
+    assert twitter2.tweet_messages == ['Test 1', 'Test 2']
 
 def test_tweet_with_hashtags(twitter):
     message = "Test #first message"
