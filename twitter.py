@@ -5,7 +5,7 @@ import os
 class Twitter(object):
     version = '1.0'
 
-    def __init__(self, backend=None, username=None):
+    def __init__(self, backend=None):
         self.backend = backend
         self._tweets = []
 
