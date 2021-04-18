@@ -45,7 +45,7 @@ def test_initialize_two_twitter_classes(backend):
     twitter1.tweet('Test 1')
     twitter1.tweet('Test 2')
 
-    assert  twitter2.tweets == ['Test 1', 'Test 2']
+    assert twitter2.tweets == ['Test 1', 'Test 2']
 
 def test_tweet_with_hashtags(twitter):
     message = "Test #first message"

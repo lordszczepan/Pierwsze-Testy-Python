@@ -8,7 +8,6 @@ class Twitter(object):
     def __init__(self, backend=None, username=None):
         self.backend = backend
         self._tweets = []
-        self.username = username
 
     @property
     def tweets(self):
@@ -19,12 +18,12 @@ class Twitter(object):
     def tweet(self, message):
         if len(message) > 160:
             raise Exception("Message too long.")
-        self.tweets.append({'message': message})
+        self.tweets.append(message)
         if self.backend:
             self.backend.write("\n".join(self.tweets))
 
     def find_hashtags(self, message):
-        return [m.lower() for m in re.findall(r"#(\w+)", message)]
+        return [m.lower() for m in re.findall("#(\w+)", message)]
     # 'r' jest konieczne ale nie opisane w tutorialu
 
 # twitter = Twitter()
