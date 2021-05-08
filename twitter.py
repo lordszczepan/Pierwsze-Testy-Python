@@ -29,6 +29,7 @@ class Twitter(object):
     def get_user_avatar(self):
         if not self.username:
             return None
+
         url = urljoin(USERS_API, self.username)
         resp = requests.get(url)
         return resp.json()['avatar_url']
@@ -36,7 +37,11 @@ class Twitter(object):
     def tweet(self, message):
         if len(message) > 160:
             raise Exception("Message too long.")
-        self.tweets.append({'message': message, 'avatar': self.get_user_avatar()})
+        self.tweets.append({
+            'message': message,
+            'avatar': self.get_user_avatar(),
+            'hashtags': self.find_hashtags(message)
+        })
         if self.backend:
             self.backend.write(json.dumps(self.tweets))
 
