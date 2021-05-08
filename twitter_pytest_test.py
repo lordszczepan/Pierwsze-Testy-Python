@@ -2,6 +2,13 @@ import pytest
 
 from twitter import Twitter
 
+class ResponseGetMock(object):
+    def json(self):
+        return {'avatar_url': 'test'}
+
+@pytest.fixture(autouse=True)
+def no_requests(monkeypatch):
+    monkeypatch.delattr("requests.sessions.Session.request")
 
 @pytest.fixture
 def backend(tmpdir):
@@ -9,20 +16,22 @@ def backend(tmpdir):
     temp_file.write('')
     return temp_file
 
+@pytest.fixture(params=[None, 'python'])
+def username(request):
+    return request.param
 
 @pytest.fixture(params=['list', 'backend'], name='twitter')
-def fixture_twitter(backend, request):
+def fixture_twitter(backend, username, request, monkeypatch):
     if request.param == 'list':
-        twitter = Twitter()
+        twitter = Twitter(username=username)
     elif request.param == 'backend':
-        twitter = Twitter(backend=backend)
+        twitter = Twitter(backend=backend, username=username)
+
+    def monkey_return():
+        return 'test'
+
+    monkeypatch.setattr(twitter, 'get_user_avatar', monkey_return)
     return twitter
-
-
-# @pytest.fixture
-# def twitter():
-#    twitter = Twitter()
-#    return twitter
 
 def test_twitter_initialization(twitter):
     assert twitter
@@ -64,7 +73,6 @@ def test_tweet_with_hashtags_uppercase(twitter):
     twitter.tweet(message)
     assert 'first' in twitter.find_hashtags(message)
 
-
 @pytest.mark.parametrize("message, expected", (
         ("Test #first message", ["first"]),
         ("#first Test message", ["first"]),
@@ -73,3 +81,9 @@ def test_tweet_with_hashtags_uppercase(twitter):
         ("Test message #first #second", ["first", "second"])))
 def test_tweet_with_hashtags_tuple(twitter, message, expected):
     assert twitter.find_hashtags(message) == expected
+
+def test_tweet_with_username(twitter):
+    if not twitter.username:
+        pytest.skip()
+    twitter.tweet('Test message')
+    assert twitter.tweets == [{'message': 'Test message', 'avatar': 'test'}]

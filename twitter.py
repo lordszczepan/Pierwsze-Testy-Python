@@ -4,7 +4,7 @@ from urllib.parse import urljoin
 
 import requests
 
-USERS_API = "https://api.github.com/users"
+USERS_API = "https://api.github.com/users/"
 
 class Twitter(object):
     version = '1.0'
